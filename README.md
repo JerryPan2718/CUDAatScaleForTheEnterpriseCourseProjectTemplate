@@ -4,6 +4,31 @@
 
 This project demonstrates the use of NVIDIA Performance Primitives (NPP) library with CUDA to perform image rotation. The goal is to utilize GPU acceleration to efficiently rotate a given image by a specified angle, leveraging the computational power of modern GPUs. The project is a part of the CUDA at Scale for the Enterprise course and serves as a template for understanding how to implement basic image processing operations using CUDA and NPP.
 
+Here's a high-level overview of how the code works for the image rotation project using the NPP library in CUDA.
+
+1. Initialization and Setup:
+CUDA and NPP Information: The code starts by printing information about the CUDA driver and runtime versions, as well as the NPP library version. It checks if the CUDA device meets the minimum requirements to run the program.
+Input File Handling: The program looks for an input file (an image) to process. If the file is specified via command-line arguments, it uses that file; otherwise, it defaults to a predefined file (e.g., Lena.pgm). It checks if the file can be opened successfully.
+2. Image Loading:
+Host Image Object: The code declares a host image object, oHostSrc, to hold the grayscale image data loaded from the input file.
+Device Image Object: After loading the image into the host object, it copies the image data to the GPU (device) memory using an npp::ImageNPP_8u_C1 object named oDeviceSrc.
+3. Rotation Preparation:
+Rotation Angle: The angle of rotation is set to a specific value (e.g., 45 degrees). This value can be adjusted to rotate the image by different angles.
+Bounding Box Calculation: The program calculates the bounding box of the rotated image using nppiGetRotateBound. This step ensures that the rotated image will fit within the calculated bounds without being cropped.
+4. Image Rotation:
+Rotation Center: The center of rotation is set to the center of the image. This is where the image will be rotated around.
+Performing the Rotation: The nppiRotate_8u_C1R function is called to perform the actual rotation on the GPU. It takes the source image, the rotation angle, the rotation center, and other parameters to generate the rotated image. The rotated image is stored in the oDeviceDst object, which is allocated based on the bounding box dimensions.
+5. Saving the Rotated Image:
+Copy to Host: After the rotation is complete, the program copies the rotated image data from the GPU back to a host image object, oHostDst.
+Save to Disk: The rotated image is then saved to a file (e.g., Lena_rotated.pgm). The output file name can be specified via command-line arguments, or it defaults to a predefined name.
+6. Cleanup:
+Memory Deallocation: The program ensures that the device memory used for the source and destination images is properly freed to avoid memory leaks.
+Error Handling: The program includes error handling using try-catch blocks to catch any exceptions that occur during execution. This helps in gracefully handling errors and providing useful error messages.
+7. Execution Flow:
+The program begins by setting up and checking system compatibility.
+It loads the image, computes the necessary transformations, performs the rotation, and finally saves the output.
+If anything goes wrong, the program catches exceptions, reports the errors, and exits gracefully.
+
 ## Code Organization
 
 ```bin/```
